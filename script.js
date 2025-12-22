@@ -38,7 +38,6 @@ role: "Illustrator",
 img: "https://picsum.photos/400/400?random=6"
 }
 ];
-let profiles = [];
 const profilesContainer = document.getElementById("profiles");
 
 async function loadProfiles() {
