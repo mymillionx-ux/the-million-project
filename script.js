@@ -1,39 +1,27 @@
-// ==============================
-// SUPABASE CONFIG
-// ==============================
-const SUPABASE_URL = "https://tyjpwaiefbocipkfsjtx.supabase.co";
-const SUPABASE_ANON_KEY = "INCOLLA_QUI_LA_TUA_ANON_KEY";
+/* =========================
+SUPABASE CONFIG
+========================= */
+const SUPABASE_URL = "https://TUO-PROGETTO.supabase.co";
+const SUPABASE_ANON_KEY = "LA-TUA-ANON-KEY";
 
 const supabase = window.supabase.createClient(
 SUPABASE_URL,
 SUPABASE_ANON_KEY
 );
 
-// ==============================
-// ELEMENTI HTML
-// ==============================
-const form = document.getElementById("form");
-const nameInput = document.getElementById("name");
-const linkInput = document.getElementById("link");
-const photoInput = document.getElementById("photoInput");
-
+/* =========================
+ELEMENTI DOM
+========================= */
 const profilesContainer = document.getElementById("profiles");
-const spotlight = document.getElementById("spotlightCard");
+const form = document.getElementById("joinForm");
+const nameInput = document.getElementById("nameInput");
+const linkInput = document.getElementById("linkInput");
+const photoInput = document.getElementById("photoInput");
 const counter = document.getElementById("counter");
 
-// ==============================
-// VARIABILI
-// ==============================
-let profiles = [];
-let spotlightIndex = 0;
-
-let current = 0;
-let target = 0;
-let speed = 20;
-
-// ==============================
-// CARICA PROFILI DA SUPABASE
-// ==============================
+/* =========================
+LOAD PROFILES
+========================= */
 async function loadProfiles() {
 const { data, error } = await supabase
 .from("profiles")
@@ -45,10 +33,9 @@ console.error(error);
 return;
 }
 
-profiles = data;
 profilesContainer.innerHTML = "";
 
-profiles.forEach(p => {
+data.forEach(p => {
 const card = document.createElement("div");
 card.className = "card";
 
@@ -61,47 +48,13 @@ card.innerHTML = `
 profilesContainer.appendChild(card);
 });
 
-target = profiles.length;
-updateCounter();
-updateSpotlight();
+counter.textContent = data.length.toLocaleString("it-IT");
 }
 
-// ==============================
-// CONTATORE ANIMATO
-// ==============================
-function updateCounter() {
-if (current >= target) {
-counter.textContent = target.toLocaleString("it-IT");
-return;
-}
-
-current += speed;
-counter.textContent = current.toLocaleString("it-IT");
-requestAnimationFrame(updateCounter);
-}
-
-// ==============================
-// SPOTLIGHT AUTOMATICO
-// ==============================
-function updateSpotlight() {
-if (profiles.length === 0) return;
-
-const p = profiles[spotlightIndex % profiles.length];
-
-spotlight.innerHTML = `
-<img src="${p.photo_url}" alt="${p.name}">
-<h4>${p.name}</h4>
-<span>${p.link}</span>
-`;
-
-spotlightIndex++;
-}
-
-setInterval(updateSpotlight, 5000);
-
-// ==============================
-// INVIO FORM
-// ==============================
+/* =========================
+FORM SUBMIT (SOLO TEST)
+Stripe lo colleghiamo dopo
+========================= */
 form.addEventListener("submit", async (e) => {
 e.preventDefault();
 
@@ -111,18 +64,29 @@ const file = photoInput.files[0];
 
 if (!name || !link || !file) return;
 
-const reader = new FileReader();
+// upload immagine
+const fileName = `${Date.now()}-${file.name}`;
+const { error: uploadError } = await supabase.storage
+.from("photos")
+.upload(fileName, file);
 
-reader.onload = async () => {
+if (uploadError) {
+console.error(uploadError);
+return;
+}
+
+const { data: urlData } = supabase.storage
+.from("photos")
+.getPublicUrl(fileName);
+
+// insert profilo
 const { error } = await supabase
 .from("profiles")
-.insert([
-{
+.insert({
 name: name,
-link: link.replace("https://", "").replace("http://", ""),
-photo_url: reader.result
-}
-]);
+link: link,
+photo_url: urlData.publicUrl
+});
 
 if (error) {
 console.error(error);
@@ -130,14 +94,11 @@ return;
 }
 
 form.reset();
-current = 0;
-await loadProfiles();
-};
-
-reader.readAsDataURL(file);
+loadProfiles();
 });
 
-// ==============================
-// AVVIO
-// ==============================
+/* =========================
+START
+========================= */
 loadProfiles();
+
