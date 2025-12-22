@@ -1,8 +1,12 @@
 /* =========================
 SUPABASE CONFIG
 ========================= */
-const SUPABASE_URL = "https://TUO-PROGETTO.supabase.co";
-const SUPABASE_ANON_KEY = "LA-TUA-ANON-KEY";
+const SUPABASE_URL = 
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = 'https://tyipwaiefbocipkfsjtx.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY
+const supabase = createClient(supabaseUrl, supabaseKey);
+const SUPABASE_ANON_KEY = "sb_publishable_KQtIr0Y2vd2NCuhV2EwGFg_askN6s6r";
 
 const supabase = window.supabase.createClient(
 SUPABASE_URL,
