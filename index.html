@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<title>The Million Project</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="style.css" />
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+<div class="logo">THE MILLION</div>
+<nav>
+<a href="#profiles">People</a>
+<a href="#join">Join</a>
+</nav>
+</header>
+
+<!-- HERO -->
+<main class="hero">
+<h1>
+Qui non c’è un algoritmo.<br>
+<span>Ci sono persone.</span>
+</h1>
+
+<p class="hero-sub">
+Un milione di profili.<br>
+Tutti visibili allo stesso modo.<br>
+<strong>1 € per entrare. Per sempre.</strong>
+</p>
+
+<a href="#join" class="cta-main">ENTRA NEL MILIONE →</a>
+
+<div class="counter">
+<span id="count">0</span> / 1.000.000 profili occupati
+</div>
+
+<section class="spotlight">
+<h2>Featured Person</h2>
+
+<div id="spotlightCard" class="spotlight-card">
+<!-- contenuto dinamico -->
+</div>
+</section>
+
+<!-- PROFILES GRID -->
+<section id="profiles" class="profiles"></section>
+</section>
+
+<!-- JOIN -->
+<section id="join" class="join">
+<h2>Your profile</h2>
+
+<form id="joinForm">
+<input id="nameInput" type="text" placeholder="Nome e Cognome" required />
+<input id="linkInput" type="url" placeholder="Link (Instagram, TikTok, sito…)" required />
+<input id="photoInput" type="file" accept="image/*" required />
+<button type="submit">Pay 1€ & Join</button>
+</form>
+<p class="note">No promises. Just visibility.</p>
+</section>
+
+<!-- FOOTER -->
+<footer style="text-align:center; padding:40px 20px; opacity:0.5;">
+© The Million Project
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
