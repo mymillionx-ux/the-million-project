@@ -1,6 +1,6 @@
-/***********************
+/*************************
 * SUPABASE CONFIG
-***********************/
+*************************/
 const SUPABASE_URL = "https://tyipwaiefbocipkfsjtx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aXB3YWllZmJvY2lwa2ZzanR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNTY1ODMsImV4cCI6MjA4MTkzMjU4M30.xu48PIJaNJtnJ19zy4O2F-zdNA2uQq3ZMDaF6ciNQXs";
 
@@ -9,9 +9,9 @@ SUPABASE_URL,
 SUPABASE_ANON_KEY
 );
 
-/***********************
+/*************************
 * ELEMENTI DOM
-***********************/
+*************************/
 const profilesContainer = document.getElementById("profiles");
 const form = document.getElementById("joinForm");
 const nameInput = document.getElementById("nameInput");
@@ -20,9 +20,12 @@ const photoInput = document.getElementById("photoInput");
 const counter = document.getElementById("counter");
 const spotlight = document.getElementById("spotlightCard");
 
-/***********************
+let profiles = [];
+let spotlightIndex = 0;
+
+/*************************
 * LOAD PROFILES
-***********************/
+*************************/
 async function loadProfiles() {
 const { data, error } = await supabase
 .from("profiles")
@@ -34,10 +37,10 @@ console.error(error);
 return;
 }
 
+profiles = data;
 profilesContainer.innerHTML = "";
-counter.textContent = data.length.toLocaleString("it-IT");
 
-data.forEach((p) => {
+profiles.forEach(p => {
 const card = document.createElement("div");
 card.className = "card";
 card.innerHTML = `
@@ -48,16 +51,15 @@ card.innerHTML = `
 profilesContainer.appendChild(card);
 });
 
-updateSpotlight(data);
+counter.textContent = profiles.length.toLocaleString("it-IT");
+updateSpotlight();
 }
 
-/***********************
+/*************************
 * SPOTLIGHT
-***********************/
-let spotlightIndex = 0;
-
-function updateSpotlight(profiles) {
-if (!profiles.length) return;
+*************************/
+function updateSpotlight() {
+if (profiles.length === 0) return;
 
 const p = profiles[spotlightIndex % profiles.length];
 spotlight.innerHTML = `
@@ -68,10 +70,12 @@ spotlight.innerHTML = `
 spotlightIndex++;
 }
 
-/***********************
+setInterval(updateSpotlight, 5000);
+
+/*************************
 * FORM SUBMIT
-***********************/
-form.addEventListener("submit", async (e) => {
+*************************/
+form.addEventListener("submit", async e => {
 e.preventDefault();
 
 const name = nameInput.value.trim();
@@ -82,11 +86,13 @@ if (!name || !link || !file) return;
 
 const reader = new FileReader();
 reader.onload = async () => {
-const { error } = await supabase.from("profiles").insert({
+const { error } = await supabase.from("profiles").insert([
+{
 name,
 link,
 photo_url: reader.result
-});
+}
+]);
 
 if (error) {
 console.error(error);
@@ -100,9 +106,7 @@ loadProfiles();
 reader.readAsDataURL(file);
 });
 
-/***********************
+/*************************
 * INIT
-***********************/
+*************************/
 loadProfiles();
-setInterval(loadProfiles, 5000);
-
