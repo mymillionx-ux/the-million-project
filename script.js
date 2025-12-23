@@ -4,9 +4,6 @@
 const SUPABASE_URL = "https://tyipwaiefbocipkfsjtx.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aXB3YWllZmJvY2lwa2ZzanR4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzNTY1ODMsImV4cCI6MjA4MTkzMjU4M30.xu48PIJaNJtnJ19zy4O2F-zdNA2uQq3ZMDaF6ciNQXs";
 
-const supabase = window.supabase.createClient(
-SUPABASE_URL,
-SUPABASE_ANON_KEY
 );
 
 /*************************
