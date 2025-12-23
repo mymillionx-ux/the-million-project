@@ -1,3 +1,9 @@
+if (window.__SUPABASE_LOADED__) {
+console.warn("Script già caricato, blocco duplicato");
+throw new Error("Script duplicato");
+}
+window.__SUPABASE_LOADED__ = true;
+
 /***********************
 * SUPABASE CONFIG
 ***********************/
